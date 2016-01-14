@@ -1,38 +1,41 @@
 ## PHP Renderer
 
-This is a renderer for rendering PHP view scripts into a PSR-7 Response object. It works well with Slim Framework 3.
+This is a renderer for rendering [Alfred 2](https://www.alfredapp.com/) XML into a PSR-7 Response object. It works well with Slim Framework 3.
 
 ## Installation
 
 Install with [Composer](http://getcomposer.org):
 
-    composer require slim/php-view
+    composer require klein0r/slim-alfred-renderer
 
 ## Usage With Slim 3
 
 ```php
-use Slim\Views\PhpRenderer;
+use Slim\Views\ScriptFilterRenderer;
 
 include "vendor/autoload.php";
 
 $app = new Slim\App();
 $container = $app->getContainer();
-$container['renderer'] = new PhpRenderer("./templates");
+$container['alfredRenderer'] = new ScriptFilterRenderer();
 
 $app->get('/hello/{name}', function ($request, $response, $args) {
-    return $this->renderer->render($response, "/hello.php", $args);
+
+    $data = [
+        [
+            'uid' => '35345345u2938475h',
+            'arg' => 'argument1',
+            'title' => 'thetitle',
+            'subtitle' => 'thesubtitle',
+            'icon' => 'icon.png',
+            'valid' => 'yes'
+        ]
+    ];
+
+    return $this->alfredRenderer->render($response, $data);
 });
 
 $app->run();
-```
-
-## Usage with any PSR-7 Project
-```php
-//Construct the View
-$phpView = new PhpRenderer("./path/to/templates");
-
-//Render a Template
-$response = $phpView->render(new Response(), "/path/to/template.php", $yourData);
 ```
 
 ## Exceptions
